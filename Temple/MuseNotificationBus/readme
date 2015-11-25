@@ -1,0 +1,31 @@
+version 1.0 -
+2015-11-13 12:53 am
+# 基本架构搭建
+使用观察者模式。将观察者，回调方法，回调方法参数，订阅主题 订阅到主题
+
+## 生命周期(*Service 生命周期比 MuseNotificationCenter 长时，Service将接收不到事件通知(Service 中订阅，Service 中接收) *)
+结合Activity，Fragment，Service的生命周期，.e.g. 在Activity的 onResume 中订阅，onPause 中取消订阅。
+在 onPause 中取消订阅时，系统会将观察者变成弱引用保存在队列中，又GC根据内存情况回收；onResume 会先从弱引用队列中查找
+，不存在则从新订阅。
+
+## 优先级
+通知事件处理优先级分为三级：ASAP，NORMAL，IDLE
+* ASAP(as soon as possible) 最高级，通知事件会排在同级别事件的后面
+* NORMAL 普通级，通知事件会排在同级别事件的后面，NORMAL级别的事件排在ASAP级后面
+* IDLE 最低级，通知事件会排在同级别事件的后面， IDLE级别的事件排在ASAP级后面
+为了避免事件处理失败导致整个阻塞，采用快速失败返回
+
+## 回调调用(*TODO 区分UI线程，非UI线程回调*)
+在UI线程回调
+
+## 类定义
+    public class MuseNotificationCenter //单例模式
+        public static MuseNotificationCenter instanceCenter();
+        public registerObserver();
+        public unregisterObserver();
+        public postNotification()
+
+    public class MuseNotificationQueue
+
+
+订阅方法不能重载
